@@ -1,0 +1,12 @@
+{
+  "name": "string",
+  "type": "Microsoft.Sql/servers",
+  "apiVersion": "2014-04-01",
+  "location": "string",
+  "tags": {},
+  "properties": {
+    "version": "string",
+    "administratorLogin": "string",
+    "administratorLoginPassword": "string"
+  }
+}
