@@ -1,0 +1,17 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "administratorLogin": {
+            "value": "adc-sql-server-admin"
+        },
+        "administratorLoginPassword": {
+            "reference": {
+                "keyVault": {
+                "id": "//subscriptions/c1a08419-f3d3-4126-a27f-41c74134493d/resourceGroups/azure-database-copy-rg/providers/Microsoft.KeyVault/vaults/adc-kv"
+                },
+                "secretName": "adc-sql-server-admin-pass"
+            }
+        }
+    }
+}

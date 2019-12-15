@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "administratorLogin": {
+          "type": "string"
+        },
+        "administratorLoginPassword": {
+          "type": "securestring"
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+      {
+      "name": "string",
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2014-04-01",
+      "location": "string",
+      "tags": {
+
+      },
+      "properties": {
+        "version": "12.0",
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]"
+        }
+      }
+    ],
+    "outputs": {
+    }
+  }
+  
