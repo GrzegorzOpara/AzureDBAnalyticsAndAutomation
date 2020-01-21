@@ -2,14 +2,11 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "administratorLogin": {
-            "value": "SqlServerAdmin"
+        "storageAccountName": {
+            "value": "sqlstorageaccount"
         },
-        "administratorLoginPassword": {
-            "value": "Pa$$w0rd"
-        },
-        "sqlServerName": {
-            "value": "SqlServer-01"
+        "containerName": {
+            "value": "BacPac"
         },
         "location": {
             "value": "west europe"
