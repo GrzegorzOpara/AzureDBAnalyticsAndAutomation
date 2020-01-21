@@ -3,19 +3,19 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "administratorLogin": {
-            "value": "SqlServerAdmin"
+            "value": "DevOpsCave"
         },
         "administratorPassword": {
             "value": "DevOps123"
         },
         "sqlServerName": {
-            "value": "SqlServer-01"
+            "value": "devopscave-sql-01"
         },
         "sqlPoolName": {
-            "value": "SqlElasticPool-01"
+            "value": "devopscave-pool-01"
         },
         "sqlDbName": {
-            "value": "SqlDb-01"
+            "value": "devopscave-sqldb-01"
         },
         "bacpacUrl": {
             "value": "https://sqldbstoresa.blob.core.windows.net/bacpacs/sqldb_test.bacpac"
@@ -23,11 +23,8 @@
         "storageAccountKey": {
             "value": "KYDeaXgyS7mVxFN6YSi92y9qrVr6AIM1SmkP6J7RkXaVXSn6DLfyzH0C15+3WZ/pTeqX9NsXK2kLitydgxly9w=="
         },
-        "location": {
-            "value": "west europe"
-        },
         "workspaceName": {
-            "value": "SqlAnalyticsWorkspace"
+            "value": "devopscave-sqlanalyticsworkspace"
         }
     }
 }

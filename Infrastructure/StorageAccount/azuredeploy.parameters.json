@@ -6,10 +6,7 @@
             "value": "sqlstorageaccount"
         },
         "containerName": {
-            "value": "BacPac"
-        },
-        "location": {
-            "value": "west europe"
+            "value": "bacpac"
         }
     }
 }

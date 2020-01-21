@@ -26,11 +26,11 @@
         },
         "minDbCapacity": {
           "type": "int",
-          "defaultValue": 25
+          "defaultValue": 0
         },
         "maxDbCapacity": {
           "type": "int",
-          "defaultValue": 25
+          "defaultValue": 50
         }
     },
     "variables": {

@@ -3,16 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "administratorLogin": {
-            "value": "SqlServerAdmin"
+            "value": "DevOpsCave"
         },
         "administratorLoginPassword": {
-            "value": "Pa$$w0rd"
+            "value": "DevOps123"
         },
         "sqlServerName": {
-            "value": "SqlServer-01"
-        },
-        "location": {
-            "value": "west europe"
+            "value": "devopscave-sql-01"
         }
     }
 }

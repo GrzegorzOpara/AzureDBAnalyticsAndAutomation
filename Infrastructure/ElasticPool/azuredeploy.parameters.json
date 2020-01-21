@@ -3,13 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "sqlServerName": {
-            "value": "SqlServer-01"
+            "value": "devopscave-sql-01"
         },
         "sqlPoolName": {
-            "value": "SqlElasticPool-01"
-        },
-        "location": {
-            "value": "West Europe"
+            "value": "devopscave-pool-01"
         }
     }
 }
