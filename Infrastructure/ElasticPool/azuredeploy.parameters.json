@@ -7,6 +7,9 @@
         },
         "sqlPoolName": {
             "value": "devopscave-pool-01"
+        },
+        "workspaceName": {
+            "value": "devopscave-sqlanalyticsworkspace-01"
         }
     }
 }

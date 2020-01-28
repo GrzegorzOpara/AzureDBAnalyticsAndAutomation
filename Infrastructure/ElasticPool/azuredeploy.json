@@ -31,6 +31,14 @@
         "maxDbCapacity": {
           "type": "int",
           "defaultValue": 50
+        },
+        "workspaceName": {
+        "type": "string",
+        "defaultValue": "SqlAnalyticsWorkspace"
+        },
+        "logsRetentionDays": {
+          "type": "int",
+          "defaultValue": 7
         }
     },
     "variables": {
@@ -52,6 +60,28 @@
             "minCapacity": "[parameters('minDbCapacity')]",
             "maxCapacity": "[parameters('maxDbCapacity')]"
           }
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/elasticpools/providers/diagnosticSettings",
+        "name": "[concat(parameters('sqlServerName'),'/', parameters('sqlPoolName'),'/Microsoft.Insights/SQLLogAnalyticsIntegration')]",
+        "apiVersion": "2017-05-01-preview",
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers/elasticpools', parameters('sqlServerName'), parameters('sqlPoolName'))]"
+        ],
+        "properties": {
+          "name": "SQLLogAnalyticsIntegration",
+			    "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+          "metrics": [
+          {
+            "category": "AllMetrics",
+            "enabled": true,
+            "retentionPolicy": {
+              "enabled": true,
+              "days": "[parameters('logsRetentionDays')]"
+            }
+          }
+          ]
         }
       }
     ],
