@@ -2,14 +2,14 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "administratorLogin": {
-            "value": "DevOpsCave"
-        },
-        "administratorLoginPassword": {
-            "value": "DevOps123"
-        },
         "sqlServerName": {
             "value": "devopscave-sql-01"
+        },
+        "sqlPoolName": {
+            "value": "devopscave-pool-01"
+        },
+        "workspaceName": {
+            "value": "devopscave-sqlanalyticsworkspace-01"
         }
     }
 }

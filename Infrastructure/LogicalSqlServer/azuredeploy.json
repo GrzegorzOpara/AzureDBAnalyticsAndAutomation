@@ -2,6 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "sqlServerName": {
+          "type": "string"
+        },
         "administratorLogin": {
           "type": "string"
         },
@@ -10,50 +13,15 @@
         },
         "location": {
           "type": "string",
-          "defaultValue": "west europe"
-        },
-        "logsRetentionDays": {
-          "type": "int",
-          "defaultValue": 7
+          "defaultValue": "[resourceGroup().location]"
         }
     },
     "variables": {
-      "sqlServerName": "[toLower( concat('sqlServer-', uniqueString(resourceGroup().id) ) )]",
-      "sqlPoolName": "[toLower( concat('sqlPool-', uniqueString(resourceGroup().id) ) )]",
-      "sqlDbName": "[toLower( concat('sqlDb-', uniqueString(resourceGroup().id) ) )]",
-      "workspaceName": "[toLower( concat('omsWorkspace-', uniqueString(resourceGroup().id) ) )]"
+      
     },
     "resources": [
       {
-        "type": "Microsoft.OperationalInsights/workspaces",
-        "name": "[variables('workspaceName')]",
-        "apiVersion": "2015-11-01-preview",
-        "location": "[parameters('location')]",
-        "properties": {
-          "sku": {
-            "name": "pergb2018"
-          },
-          "retentionInDays": 90
-        }
-      },
-      {
-        "type": "Microsoft.OperationsManagement/solutions",
-        "apiVersion": "2015-11-01-preview",
-        "name": "[Concat('AzureSQLAnalytics(', variables('workspaceName'), ')')]",
-        "location": "[parameters('location')]",
-        "dependsOn": ["[concat('Microsoft.OperationalInsights/workspaces/', variables('workspaceName'))]"],
-        "plan": {
-          "name": "[Concat('AzureSQLAnalytics(', variables('workspaceName'), ')')]",
-          "product": "OMSGallery/AzureSQLAnalytics",
-          "promotionCode": "",
-          "publisher": "Microsoft"
-          },
-        "properties": {
-          "workspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces/', variables('workspaceName'))]"
-          }
-      },
-      {
-        "name": "[variables('sqlServerName')]",
+        "name": "[parameters('sqlServerName')]",
         "type": "Microsoft.Sql/servers",
         "apiVersion": "2015-05-01-preview",
         "location": "[parameters('location')]",
@@ -67,166 +35,14 @@
             "apiVersion": "2018-06-01-preview",
             "name": "AllowAllWindowsAzureIps",
             "location": "[parameters('location')]",
-            "dependsOn": ["[concat('Microsoft.Sql/servers/', variables('sqlServerName'))]"],
+            "dependsOn": ["[concat('Microsoft.Sql/servers/', parameters('sqlServerName'))]"],
             "properties": {
               "endIpAddress": "0.0.0.0",
               "startIpAddress": "0.0.0.0"
             }
           }
         ]
-      },
-      {
-        "name": "[concat(variables('sqlServerName'), '/', variables('sqlPoolName'))]",
-        "type": "Microsoft.Sql/servers/elasticPools",
-        "apiVersion": "2017-10-01-preview",
-        "dependsOn": ["[concat('Microsoft.Sql/servers/', variables('sqlServerName'))]"],
-        "location": "[parameters('location')]",
-        "sku": {
-          "name": "StandardPool",
-          "tier": "Standard",
-          "capacity": 50
-        },
-        "properties": {
-          "perDatabaseSettings": {
-            "minCapacity": 0,
-            "maxCapacity": 20
-          }
-        }
-      },
-      {
-        "name": "[concat(variables('sqlServerName'), '/', variables('sqlDbName'), '-', copyIndex())]",
-        "apiVersion": "2017-10-01-preview",
-        "type": "Microsoft.Sql/servers/databases",
-        "location": "[parameters('location')]",
-        "dependsOn": [
-            "[concat('Microsoft.Sql/servers/', variables('sqlServerName'))]",
-            "[concat('Microsoft.Sql/servers/', variables('sqlServerName') ,'/elasticpools/', variables('sqlPoolName'))]"
-          ],
-        "properties": {
-          "elasticPoolId": "[resourceId('Microsoft.Sql/servers/elasticPools', variables('sqlServerName'), variables('sqlPoolName'))]",
-          "sampleName": "AdventureWorksLT"
-          },
-          "copy": {
-          "name": "addDatabasesInElasticPool",
-          "count": 1
-          }
-      },
-      {
-        "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
-        "name": "[concat(variables('sqlServerName'),'/', variables('sqlDbName'),'-',copyIndex(),'/Microsoft.Insights/SQLLogAnalyticsIntegration')]",
-        "apiVersion": "2017-05-01-preview",
-        "dependsOn": [
-          "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), concat(variables('sqlDbName'),'-',copyIndex()))]"
-        ],
-        "copy": {
-          "name": "diagnosticSettingsPerDatabase",
-          "count": 1
-          },
-        "properties": {
-          "name": "SQLLogAnalyticsIntegration",
-			    "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]",
-          "logs": [
-            {
-              "category": "Blocks",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            },
-            {
-              "category": "QueryStoreWaitStatistics",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            },
-            {
-              "category": "Errors",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            },
-            {
-              "category": "QueryStoreRuntimeStatistics",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            },
-            {
-              "category": "DatabaseWaitStatistics",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            },
-            {
-              "category": "Timeouts",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            },
-            {
-              "category": "SQLInsights",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            },
-            {
-              "category": "Audit",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            },
-            {
-              "category": "SQLSecurityAuditEvents",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            },
-            {
-              "category": "AutomaticTuning",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            },
-                        {
-              "category": "Deadlocks",
-              "enabled": true,
-              "retentionPolicy": {
-                "days": "[parameters('logsRetentionDays')]",
-                "enabled": true
-              }
-            }
-          ],
-        "metrics": [
-        {
-          "category": "AllMetrics",
-          "enabled": true,
-          "retentionPolicy": {
-            "enabled": true,
-            "days": "[parameters('logsRetentionDays')]"
-          }
-        }
-        ]
       }
-    }
     ],
     "outputs": {}
   }

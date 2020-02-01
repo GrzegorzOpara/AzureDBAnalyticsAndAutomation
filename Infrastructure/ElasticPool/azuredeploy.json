@@ -1,0 +1,90 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlServerName": {
+          "type": "string"
+        },
+        "sqlPoolName": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string",
+          "defaultValue": "[resourceGroup().location]"
+        },
+        "sku_name": {
+          "type": "string",
+          "defaultValue": "StandardPool"
+        },
+        "sku_tier": {
+          "type": "string",
+          "defaultValue": "Standard"
+        },
+        "sku_capacity": {
+          "type": "int",
+          "defaultValue": 50
+        },
+        "minDbCapacity": {
+          "type": "int",
+          "defaultValue": 0
+        },
+        "maxDbCapacity": {
+          "type": "int",
+          "defaultValue": 50
+        },
+        "workspaceName": {
+        "type": "string",
+        "defaultValue": "SqlAnalyticsWorkspace"
+        },
+        "logsRetentionDays": {
+          "type": "int",
+          "defaultValue": 7
+        }
+    },
+    "variables": {
+
+    },
+    "resources": [
+      {
+        "name": "[concat(parameters('sqlServerName'), '/', parameters('sqlPoolName'))]",
+        "type": "Microsoft.Sql/servers/elasticPools",
+        "apiVersion": "2017-10-01-preview",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "[parameters('sku_name')]", 
+          "tier": "[parameters('sku_tier')]", 
+          "capacity": "[parameters('sku_capacity')]"
+        },
+        "properties": {
+          "perDatabaseSettings": {
+            "minCapacity": "[parameters('minDbCapacity')]",
+            "maxCapacity": "[parameters('maxDbCapacity')]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.Sql/servers/elasticpools/providers/diagnosticSettings",
+        "name": "[concat(parameters('sqlServerName'),'/', parameters('sqlPoolName'),'/Microsoft.Insights/SQLLogAnalyticsIntegration')]",
+        "apiVersion": "2017-05-01-preview",
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers/elasticpools', parameters('sqlServerName'), parameters('sqlPoolName'))]"
+        ],
+        "properties": {
+          "name": "SQLLogAnalyticsIntegration",
+			    "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]",
+          "metrics": [
+          {
+            "category": "AllMetrics",
+            "enabled": true,
+            "retentionPolicy": {
+              "enabled": true,
+              "days": "[parameters('logsRetentionDays')]"
+            }
+          }
+          ]
+        }
+      }
+    ],
+    "outputs": {}
+  }
+  

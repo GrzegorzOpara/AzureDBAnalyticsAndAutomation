@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "administratorLogin": {
+            "value": "DevOpsCave"
+        },
+        "administratorPassword": {
+            "value": "DevOps123"
+        },
+        "sqlServerName": {
+            "value": "devopscave-sql-04"
+        },
+        "sqlPoolName": {
+            "value": "devopscave-pool-04"
+        },
+        "sqlDbName": {
+            "value": "devopscave-sqldb-05"
+        },
+        "bacpacUrl": {
+            "value": "https://sqldbstoresa.blob.core.windows.net/bacpacs/sqldb_test.bacpac"
+        },
+        "storageAccountKey": {
+            "value": "KYDeaXgyS7mVxFN6YSi92y9qrVr6AIM1SmkP6J7RkXaVXSn6DLfyzH0C15+3WZ/pTeqX9NsXK2kLitydgxly9w=="
+        },
+        "workspaceName": {
+            "value": "devopscave-sqlanalyticsworkspace-04"
+        }
+    }
+}
