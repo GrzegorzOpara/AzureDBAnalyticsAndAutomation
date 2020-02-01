@@ -1,4 +1,4 @@
-Import-Module Az
+# Import-Module Az
 
 # connect to Azure
 Connect-AzAccount
