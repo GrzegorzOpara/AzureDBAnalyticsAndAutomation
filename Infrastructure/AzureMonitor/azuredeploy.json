@@ -1,0 +1,49 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "actionGroupName": {
+        "type": "string",
+        "defaultValue": "ScaleUpElasticPool",
+        "metadata": {
+          "description": "Unique name (within the Resource Group) for the Action group."
+        }
+      },
+      "actionGroupShortName": {
+        "type": "string",
+        "defaultValue": "AGSUEP",
+        "metadata": {
+          "description": "Short name (maximum 12 characters) for the Action group."
+        }
+      }  
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Insights/actionGroups",
+            "apiVersion": "2018-03-01",
+            "name": "[parameters('actionGroupName')]",
+            "location": "Global",
+            "properties": {
+            "groupShortName": "[parameters('actionGroupShortName')]",
+            "enabled": true,
+            "automationRunbookReceivers": [
+                {
+                    "automationAccountId": "[resourceId('Microsoft.Automation/automationAccounts', 'fajnekontoautomatyczn1')]",
+                    "isGlobalRunbook": false,
+                    "runbookName": "ScaleUpAzureSqlElasticPool",
+                    "webhookResourceId": "[resourceId('Microsoft.Automation/automationAccounts/webhooks', 'fajnekontoautomatyczn1', 'WebhookReceiver')]",
+                    "useCommonAlertSchema": true,
+                    "serviceUri": "",
+                    "name": ""
+                }
+            ]
+            }
+        }
+    ],
+    "outputs":{
+        "actionGroupResourceId":{
+            "type":"string",
+            "value":"[resourceId('Microsoft.Insights/actionGroups',parameters('actionGroupName'))]"
+        }
+    }
+  }

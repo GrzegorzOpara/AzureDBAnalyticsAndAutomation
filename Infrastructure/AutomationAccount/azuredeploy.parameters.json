@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "automationAccountName": {
-            "value": "fajnekontoautomatyczn1"
+            "value": "fajnekontoautomatyczn2"
         },
         "artifactsLocation": {
             "value": "https://raw.githubusercontent.com/GrzegorzOpara/AzureDBAnalyticsAndAutomation/master"

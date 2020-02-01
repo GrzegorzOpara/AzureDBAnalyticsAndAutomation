@@ -1,0 +1,5 @@
+$Webhook = New-AzAutomationWebhook -Name "WebHook_ScaleDownAzureSqlElasticPool" -IsEnabled $True  -RunbookName "ScaleDownAzureSqlElasticPool" -ResourceGroup "DevOpsCaveRG" -AutomationAccountName "fajnekontoautomatyczn1" -ExpiryTime "01.01.2030" -Force
+
+$webhookReceiver = New-AzActionGroupReceiver -Name 'ScaleDownAzureSqlElasticPool_Receiver' -WebhookReceiver -ServiceUri $Webhook.WebhookURI
+
+Set-AzureRmActionGroup -Name "ScaleDownAzureSqlElasticPool" -ResourceGroup "DevOpsCaveRG" -ShortName "SCASEP" -Receiver $webhookReceiver 
