@@ -4,6 +4,7 @@
     "parameters": {
         "automationAccountName": {
             "type": "string",
+            "defaultValue" : "gregautomationaccounttest123",
             "metadata": {
                 "description": "Specify the name of your Automation Account"
             }
@@ -12,9 +13,9 @@
           "type": "string",
           "defaultValue": "[resourceGroup().location]"
         },
-        "_artifactsLocation": {
+        "artifactsLocation": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/asr-automation-recovery",
+            "defaultValue": "https://raw.githubusercontent.com/GrzegorzOpara/AzureDBAnalyticsAndAutomation/master",
             "metadata": {
                 "description": "URI to artifacts location"
             }
@@ -32,23 +33,38 @@
         "automationObjects": {
             "runbooks": [
                 {
-                    "name": "TestRunbook",
-                    "url": "[concat(parameters('_artifactsLocation'), '/scripts/ASR-AddPublicIp.ps1', parameters('_artifactsLocationSasToken'))]",
+                    "name": "ScaleUpAzureSqlElasticPool",
+                    "url": "[concat(parameters('artifactsLocation'), '/Infrastructure/AutomationAccount/Runbooks/Runbook_UpScaleEP.ps1')]",
                     "version": "1.0.0.0",
                     "type": "PowerShell",
-                    "description": "TestRunbook"
+                    "description": "This runbook is ude to scale the azure sql elsatic pool up"
+                },
+                {
+                    "name": "ScaleDownAzureSqlElasticPool",
+                    "url": "[concat(parameters('artifactsLocation'), '/Infrastructure/AutomationAccount/Runbooks/Runbook_DownScaleEP.ps1')]",
+                    "version": "1.0.0.0",
+                    "type": "PowerShell",
+                    "description": "This runbook is ude to scale the azure sql elsatic pool down"
                 }
             ],
             "modules": [
                 {
-                    "name": "Az.Accounts",
-                    "url": "https://www.powershellgallery.com/api/v2/package/Az.HDInsight/3.0.2/"
+                    "name": "Az.Automation",
+                    "url": "https://www.powershellgallery.com/api/v2/package/Az.Automation"
+                },
+                {
+                    "name": "Az.Sql",
+                    "url": "https://www.powershellgallery.com/api/v2/package/Az.Sql"
+                },
+                {
+                    "name": "Az.Resources",
+                    "url": "https://www.powershellgallery.com/api/v2/package/Az.Resources"
                 }
             ]
         },
         "azureAzAccounts": {
             "name": "Az.Accounts",
-            "url": "https://www.powershellgallery.com/api/v2/package/az.accounts/1.7.0/"
+            "url": "https://www.powershellgallery.com/api/v2/package/az.accounts"
         }
     },
     "resources": [
