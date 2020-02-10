@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "automationAccountName": {
-            "value": "fajnekontoautomatyczn2"
+            "value": "devopscave-aa-02"
         },
         "artifactsLocation": {
             "value": "https://raw.githubusercontent.com/GrzegorzOpara/AzureDBAnalyticsAndAutomation/master"

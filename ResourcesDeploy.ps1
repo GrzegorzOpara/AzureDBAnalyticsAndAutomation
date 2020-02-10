@@ -7,8 +7,8 @@ Connect-AzAccount
 $resourceGroup = 'DevOpsCaveRG'
 $storageAccountName = 'devopscavesa90211'
 $containerName = 'bacpac'
-$sqlDbName1 = 'devopscave-sql-lowusage-06'
-$sqlDbName2 = 'devopscave-sql-highusage-06'
+$sqlDbName1 = 'devopscave-sql-lowusage-02'
+$sqlDbName2 = 'devopscave-sql-highusage-02'
 $LocalBacPacPath = 'C:\temp\stackoverflow2010.bacpac'
 
 New-AzResourceGroup -Name $resourceGroup -Location 'West Europe'

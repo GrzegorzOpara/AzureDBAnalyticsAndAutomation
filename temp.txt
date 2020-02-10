@@ -1,5 +1,13 @@
-$Webhook = New-AzAutomationWebhook -Name "WebHook_ScaleDownAzureSqlElasticPool" -IsEnabled $True  -RunbookName "ScaleDownAzureSqlElasticPool" -ResourceGroup "DevOpsCaveRG" -AutomationAccountName "fajnekontoautomatyczn1" -ExpiryTime "01.01.2030" -Force
-
+$Webhook = New-AzAutomationWebhook -Name "WebHook_ScaleDownAzureSqlElasticPool" -IsEnabled $True  -RunbookName "ScaleDownAzureSqlElasticPool" -ResourceGroup "DevOpsCaveRG" -AutomationAccountName "devopscave-aa-02" -ExpiryTime "01.01.2030" -Force
 $webhookReceiver = New-AzActionGroupReceiver -Name 'ScaleDownAzureSqlElasticPool_Receiver' -WebhookReceiver -ServiceUri $Webhook.WebhookURI
+$actionGroup = Set-AzActionGroup -Name "ScaleDownAzureSqlElasticPool" -ResourceGroup "DevOpsCaveRG" -ShortName "ScaleDownEP" -Receiver $webhookReceiver
 
-Set-AzureRmActionGroup -Name "ScaleDownAzureSqlElasticPool" -ResourceGroup "DevOpsCaveRG" -ShortName "SCASEP" -Receiver $webhookReceiver 
+$source = New-AzScheduledQueryRuleSource -Query "AzureMetrics | where ResourceProvider=='MICROSOFT.SQL' | where ResourceId contains '/ELASTICPOOLS/' | where MetricName == 'dtu_consumption_percent' | summarize AggregatedValue = min(Maximum) by Resource, bin(TimeGenerated, 10m)" -DataSourceId "/subscriptions/c1127e1c-8695-421c-854b-a4ab6d5fe245/resourceGroups/devopscaverg/providers/Microsoft.OperationalInsights/workspaces/devopscave-sqlanalyticsworkspace-02" -QueryType "ResultCount"
+$schedule = New-AzScheduledQueryRuleSchedule -FrequencyInMinutes 10 -TimeWindowInMinutes 10
+
+$metricTrigger = New-AzScheduledQueryRuleLogMetricTrigger -ThresholdOperator "GreaterThan" -Threshold 0  -MetricTriggerType "Total" -MetricColumn "Resource"
+$aznsActionGroup = New-AzScheduledQueryRuleAznsActionGroup -ActionGroup $ActionGroup.Id
+$triggerCondition = New-AzScheduledQueryRuleTriggerCondition -ThresholdOperator "GreaterThan" -Threshold 60 -MetricTrigger $metricTrigger
+$alertingAction = New-AzScheduledQueryRuleAlertingAction -AznsAction $aznsActionGroup -Severity "4" -Trigger $triggerCondition
+
+$rule = New-AzScheduledQueryRule -Location "West Europe" -Action $alertingAction -Enabled $false -Description "TestAlert2" -Schedule $schedule -Source $source -Name "TestAlert2" -ResourceGroup 'DevOpsCaveRG'

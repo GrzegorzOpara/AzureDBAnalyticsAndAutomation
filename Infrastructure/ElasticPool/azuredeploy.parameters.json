@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "sqlServerName": {
-            "value": "devopscave-sql-01"
+            "value": "devopscave-sql-02"
         },
         "sqlPoolName": {
-            "value": "devopscave-pool-01"
+            "value": "devopscave-pool-02"
         },
         "workspaceName": {
-            "value": "devopscave-sqlanalyticsworkspace-01"
+            "value": "devopscave-sqlanalyticsworkspace-02"
         }
     }
 }
