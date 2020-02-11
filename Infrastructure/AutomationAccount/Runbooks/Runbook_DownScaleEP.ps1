@@ -20,8 +20,7 @@ Function ScaleElasticPool
     $basicTierSKU = @(50, 100, 200, 300, 400, 800, 1200, 1600)
     $standardTierSKU = @(50, 100, 200, 300, 400, 800, 1200, 1600,2000,2500,3000)
 
-    $elasticPool = Get-AzResourceGroup | Get-AzSqlServer | Get-AzSqlElasticPool | Get-AzSqlElasticPool -ElasticPoolName $ElasticPoolName
-    Write-Output $elasticPool
+    $elasticPool = Get-AzResourceGroup | Get-AzSqlServer | Get-AzSqlElasticPool -ElasticPoolName $ElasticPoolName
     $currentDTU = $elasticPool.dtu
 
     if($elasticPool.Edition -eq 'Basic') {
@@ -37,9 +36,6 @@ Function ScaleElasticPool
         Set-AzSqlElasticPool -ResourceGroupName $elasticPool.ResourceGroupName -ServerName $elasticPool.ServerName -ElasticPoolName $elasticPoolName -Dtu $newDTU -DatabaseDtuMax $newDTU -DatabaseDtuMin $newDTU
     }
 
-    Write-Output "ElasticPools name: $ElasticPoolName"
-    Write-Output "ElasticPools current DTU: $currentDTU"
-    Write-Output "ElasticPools new DTU: $newDTU"
 }
 if ($WebhookData) {
     if(-Not $WebhookData.RequestBody)
