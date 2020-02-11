@@ -33,7 +33,7 @@ Function ScaleElasticPool
     if([array]::IndexOf($TierSKU,$currentDTU) -gt 0){    
         $position = [array]::IndexOf($TierSKU,$currentDTU)
         $newDTU = $TierSKU[$position - 1]
-        Set-AzSqlElasticPool -ResourceGroupName $elasticPool.ResourceGroupName -ServerName $elasticPool.ServerName -ElasticPoolName $elasticPoolName -Dtu $newDTU -DatabaseDtuMax $newDTU -DatabaseDtuMin $newDTU
+        Set-AzSqlElasticPool -ResourceGroupName $elasticPool.ResourceGroupName -ServerName $elasticPool.ServerName -ElasticPoolName $elasticPoolName -Dtu $newDTU -DatabaseDtuMax $newDTU -DatabaseDtuMin 0
     }
 
 }

@@ -7,10 +7,11 @@ $automationAccount = 'devopscave-aa-02'
 # Variables
 $dataSourceId = (Get-AzResource -Name $logAnalyticsWorkspaceName -ExpandPropertie -ResourceGroupName $resourceGroup).ResourceId
 $location = (Get-AzResourceGroup -Name $resourceGroup).Location
+$SubscriptionId = (Get-AzContext).Subscription.id
 
 # Scaling Down EP
 # Finishing the automation account configuration
-.\New-RunAsAccount.ps1 -ResourceGroup devopscaverg -AutomationAccountName devopscave-aa-02 -ApplicationDisplayName devopscave-aa-02 -SubscriptionId c1127e1c-8695-421c-854b-a4ab6d5fe245 -CreateClassicRunAsAccount $false -SelfSignedCertPlainPassword $true -SelfSignedCertNoOfMonthsUntilExpired 120
+.\Infrastructure\ServicePrincipal\New-RunAsAccount.ps1 -ResourceGroup $resourceGroup -AutomationAccountName $automationAccount -ApplicationDisplayName $automationAccount -SubscriptionId $SubscriptionId -CreateClassicRunAsAccount $false -SelfSignedCertPlainPassword $true -SelfSignedCertNoOfMonthsUntilExpired 120
 
 # Create a webhook for scaling down elastic pool runbook
 $Webhook = New-AzAutomationWebhook -Name "WebHook_ScaleDownAzureSqlElasticPool" -IsEnabled $True  -RunbookName "ScaleDownAzureSqlElasticPool" -ResourceGroup $resourceGroup -AutomationAccountName $automationAccount -ExpiryTime "01.01.2030" -Force
@@ -22,7 +23,7 @@ $webhookReceiver = New-AzActionGroupReceiver -Name 'ScaleDownAzureSqlElasticPool
 $actionGroup = Set-AzActionGroup -Name "ScaleDownAzureSqlElasticPool" -ResourceGroup $resourceGroup -ShortName "ScaleDownEP" -Receiver $webhookReceiver 
 
 # Create the alert rule underlying objects
-$source = New-AzScheduledQueryRuleSource -Query "AzureMetrics | where ResourceProvider=='MICROSOFT.SQL' | where ResourceId contains '/ELASTICPOOLS/' | where MetricName == 'dtu_consumption_percent' | summarize AggregatedValue = min(Maximum) by Resource, bin(TimeGenerated, 10m)" -DataSourceId $dataSourceId -QueryType "ResultCount"
+$source = New-AzScheduledQueryRuleSource -Query "AzureMetrics | where ResourceProvider=='MICROSOFT.SQL' | where ResourceId contains '/ELASTICPOOLS/' | where MetricName == 'dtu_consumption_percent' | summarize AggregatedValue = avg(Average) by Resource, bin(TimeGenerated, 10m)" -DataSourceId $dataSourceId -QueryType "ResultCount"
 $schedule = New-AzScheduledQueryRuleSchedule -FrequencyInMinutes 10 -TimeWindowInMinutes 10
 $metricTrigger = New-AzScheduledQueryRuleLogMetricTrigger -ThresholdOperator "GreaterThan" -Threshold 0  -MetricTriggerType "Total" -MetricColumn "Resource"
 $aznsActionGroup = New-AzScheduledQueryRuleAznsActionGroup -ActionGroup $ActionGroup.Id
@@ -45,7 +46,7 @@ $webhookReceiver = New-AzActionGroupReceiver -Name 'ScaleUpAzureSqlElasticPool_R
 $actionGroup = Set-AzActionGroup -Name "ScaleUpAzureSqlElasticPool" -ResourceGroup $resourceGroup -ShortName "ScaleUpEP" -Receiver $webhookReceiver
 
 # Create the alert rule underlying objects
-$source = New-AzScheduledQueryRuleSource -Query "AzureMetrics | where ResourceProvider=='MICROSOFT.SQL' | where ResourceId contains '/ELASTICPOOLS/' | where MetricName == 'dtu_consumption_percent' | summarize AggregatedValue = min(Maximum) by Resource, bin(TimeGenerated, 10m)" -DataSourceId $dataSourceId -QueryType "ResultCount"
+$source = New-AzScheduledQueryRuleSource -Query "AzureMetrics | where ResourceProvider=='MICROSOFT.SQL' | where ResourceId contains '/ELASTICPOOLS/' | where MetricName == 'dtu_consumption_percent' | summarize AggregatedValue = avg(Average) by Resource, bin(TimeGenerated, 10m)" -DataSourceId $dataSourceId -QueryType "ResultCount"
 $schedule = New-AzScheduledQueryRuleSchedule -FrequencyInMinutes 10 -TimeWindowInMinutes 10
 $metricTrigger = New-AzScheduledQueryRuleLogMetricTrigger -ThresholdOperator "GreaterThan" -Threshold 0  -MetricTriggerType "Total" -MetricColumn "Resource"
 $aznsActionGroup = New-AzScheduledQueryRuleAznsActionGroup -ActionGroup $ActionGroup.Id
