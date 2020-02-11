@@ -20,7 +20,7 @@ Function ScaleElasticPool
     $basicTierSKU = @(50, 100, 200, 300, 400, 800, 1200, 1600)
     $standardTierSKU = @(50, 100, 200, 300, 400, 800, 1200, 1600,2000,2500,3000)
 
-    $elasticPool = Get-AzResourceGroup | Get-AzSqlServer | Get-AzSqlElasticPool -ElasticPoolName $ElasticPoolName
+    $elasticPool = Get-AzResourceGroup | Get-AzSqlServer | Get-AzSqlElasticPool | Get-AzSqlElasticPool -ElasticPoolName $ElasticPoolName
     Write-Output $elasticPool
     $currentDTU = $elasticPool.dtu
 
@@ -34,6 +34,7 @@ Function ScaleElasticPool
     if([array]::IndexOf($TierSKU,$currentDTU) -gt 0){    
         $position = [array]::IndexOf($TierSKU,$currentDTU)
         $newDTU = $TierSKU[$position - 1]
+        Set-AzSqlElasticPool -ResourceGroupName $elasticPool.ResourceGroupName -ServerName $elasticPool.ServerName -ElasticPoolName $elasticPoolName -Dtu $newDTU -DatabaseDtuMax $newDTU -DatabaseDtuMin $newDTU
     }
 
     Write-Output "ElasticPools name: $ElasticPoolName"

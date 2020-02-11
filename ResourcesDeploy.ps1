@@ -7,9 +7,10 @@ Connect-AzAccount
 $resourceGroup = 'DevOpsCaveRG'
 $storageAccountName = 'devopscavesa90211'
 $containerName = 'bacpac'
-$sqlDbName1 = 'devopscave-sql-lowusage-02'
-$sqlDbName2 = 'devopscave-sql-highusage-02'
+$sqlDbName1 = 'devopscave-sql-lowusage-08'
+$sqlDbName2 = 'devopscave-sql-highusage-08'
 $LocalBacPacPath = 'C:\temp\stackoverflow2010.bacpac'
+$sqlPoolName = "devopscave-pool-03"
 
 New-AzResourceGroup -Name $resourceGroup -Location 'West Europe'
 
@@ -52,7 +53,8 @@ New-AzResourceGroupDeployment -Name AzureDbDeploy_HighUsage `
 -TemplateParameterFile .\Infrastructure\AzureDB\azuredeploy.parameters.json `
 -storageAccountKey $storageAccountKey `
 -bacpacUrl $bacpacUrl `
--sqlDbName $sqlDbName1
+-sqlDbName $sqlDbName2 `
+-sqlPoolName $sqlPoolName
 
 New-AzResourceGroupDeployment -Name AzureDbDeploy_LowUsage `
 -ResourceGroupName $resourceGroup `
@@ -61,5 +63,5 @@ New-AzResourceGroupDeployment -Name AzureDbDeploy_LowUsage `
 -TemplateParameterFile .\Infrastructure\AzureDB\azuredeploy.parameters.json `
 -storageAccountKey $storageAccountKey `
 -bacpacUrl $bacpacUrl `
--sqlDbName $sqlDbName2
-
+-sqlDbName $sqlDbName1 `
+-sqlPoolName $sqlPoolName

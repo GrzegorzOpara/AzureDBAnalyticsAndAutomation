@@ -34,11 +34,9 @@ Function ScaleElasticPool
     if([array]::IndexOf($TierSKU,$currentDTU) -lt ($TierSKU.Count - 1)){    
         $position = [array]::IndexOf($TierSKU,$currentDTU)
         $newDTU = $TierSKU[$position + 1]
+        Set-AzSqlElasticPool -ResourceGroupName $elasticPool.ResourceGroupName -ServerName $elasticPool.ServerName -ElasticPoolName $elasticPoolName -Dtu $newDTU -DatabaseDtuMax $newDTU -DatabaseDtuMin 0
     }
 
-    Write-Output "ElasticPools name: $ElasticPoolName"
-    Write-Output "ElasticPools current DTU: $currentDTU"
-    Write-Output "ElasticPools new DTU: $newDTU"
 }
 if ($WebhookData) {
     if(-Not $WebhookData.RequestBody)
@@ -58,5 +56,4 @@ if($RequestBody.data.alertContext.SearchResults.tables[0].rows -ne $null) {
         write-output "Processing $SearchResultRow[0]"
         ScaleElasticPool($SearchResultRow[0])
     }
-
 }
