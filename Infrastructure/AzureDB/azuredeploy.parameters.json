@@ -21,7 +21,7 @@
             "value": "https://sqldbstoresa.blob.core.windows.net/bacpacs/sqldb_test.bacpac"
         },
         "storageAccountKey": {
-            "value": "KYDeaXgyS7mVxFN6YSi92y9qrVr6AIM1SmkP6J7RkXaVXSn6DLfyzH0C15+3WZ/pTeqX9NsXK2kLitydgxly9w=="
+            "value": ""
         },
         "workspaceName": {
             "value": "devopscave-sqlanalyticsworkspace-02"
