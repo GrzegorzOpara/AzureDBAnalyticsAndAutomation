@@ -3,28 +3,28 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "administratorLogin": {
-            "value": "DevOpsCave"
+            "value": "devopsriot"
         },
         "administratorPassword": {
             "value": "DevOps123"
         },
         "sqlServerName": {
-            "value": "devopscave-sql-02"
+            "value": "devopsriot-sql-1"
         },
         "sqlPoolName": {
-            "value": "devopscave-pool-03"
+            "value": "devopsriot-pool-1"
         },
         "sqlDbName": {
-            "value": "devopscave-sqldb-02"
+            "value": "devopsriot-sqldb-1"
         },
         "bacpacUrl": {
-            "value": "https://sqldbstoresa.blob.core.windows.net/bacpacs/sqldb_test.bacpac"
+            "value": ""
         },
         "storageAccountKey": {
             "value": ""
         },
         "workspaceName": {
-            "value": "devopscave-sqlanalyticsworkspace-02"
+            "value": "devopsriot-sqlworkspace-1"
         }
     }
 }

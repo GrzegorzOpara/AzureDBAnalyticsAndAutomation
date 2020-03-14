@@ -4,16 +4,13 @@
 Connect-AzAccount
 
 # define the resource group name
-$resourceGroup = 'DevOpsCaveRG'
-$storageAccountName = 'devopscavesa90211'
+$resourceGroup = 'devopsriot'
+$storageAccountName = 'devopsriot90210'
 $containerName = 'bacpac'
-$sqlDbName1 = 'devopscave-sql-lowusage-09'
-$sqlDbName2 = 'devopscave-sql-highusage-09'
-$sqlDbName3 = 'devopscave-sql-lowusage-10'
-$sqlDbName4 = 'devopscave-sql-highusage-10'
+$sqlDbName1 = 'devopsriot-sql-lowusage-1'
+$sqlDbName2 = 'devopsriot-sql-highusage-1'
 $LocalBacPacPath = 'C:\temp\stackoverflow2010.bacpac'
-$sqlPoolName1 = "devopscave-pool-09"
-$sqlPoolName2 = "devopscave-pool-10"
+$sqlPoolName1 = "devopsriot-pool-1"
 
 New-AzResourceGroup -Name $resourceGroup -Location 'West Europe'
 
@@ -74,23 +71,3 @@ New-AzResourceGroupDeployment -Name AzureDbDeploy_2 `
 -bacpacUrl $bacpacUrl `
 -sqlDbName $sqlDbName2 `
 -sqlPoolName $sqlPoolName1
-
-New-AzResourceGroupDeployment -Name AzureDbDeploy_3 `
--ResourceGroupName $resourceGroup `
--Mode Incremental `
--TemplateFile .\Infrastructure\AzureDB\azuredeploy.json `
--TemplateParameterFile .\Infrastructure\AzureDB\azuredeploy.parameters.json `
--storageAccountKey $storageAccountKey `
--bacpacUrl $bacpacUrl `
--sqlDbName $sqlDbName3 `
--sqlPoolName $sqlPoolName2
-
-New-AzResourceGroupDeployment -Name AzureDbDeploy_4 `
--ResourceGroupName $resourceGroup `
--Mode Incremental `
--TemplateFile .\Infrastructure\AzureDB\azuredeploy.json `
--TemplateParameterFile .\Infrastructure\AzureDB\azuredeploy.parameters.json `
--storageAccountKey $storageAccountKey `
--bacpacUrl $bacpacUrl `
--sqlDbName $sqlDbName4 `
--sqlPoolName $sqlPoolName2

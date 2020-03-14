@@ -3,13 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "administratorLogin": {
-            "value": "DevOpsCave"
+            "value": "devopsriot"
         },
         "administratorLoginPassword": {
             "value": "DevOps123"
         },
         "sqlServerName": {
-            "value": "devopscave-sql-02"
+            "value": "devopsriot-sql-1"
         }
     }
 }

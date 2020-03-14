@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "automationAccountName": {
-            "value": "devopscave-aa-02"
+            "value": "devopsriot-aa-1"
         },
         "artifactsLocation": {
             "value": "https://raw.githubusercontent.com/GrzegorzOpara/AzureDBAnalyticsAndAutomation/master"

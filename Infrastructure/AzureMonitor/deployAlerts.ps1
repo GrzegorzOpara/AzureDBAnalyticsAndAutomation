@@ -1,23 +1,23 @@
 
 # Parameters
-$resourceGroup = 'DevOpsCaveRG'
-$logAnalyticsWorkspaceName = "devopscave-sqlanalyticsworkspace-02"
-$automationAccount = 'devopscave-aa-02'
+$resourceGroup = 'devopsriot-rg'
+$logAnalyticsWorkspaceName = "devopsriot-sqlworkspace-1"
+$automationAccount = 'devopsriot-aa-1'
 
 # Variables
 $dataSourceId = (Get-AzResource -Name $logAnalyticsWorkspaceName -ExpandPropertie -ResourceGroupName $resourceGroup).ResourceId
 $location = (Get-AzResourceGroup -Name $resourceGroup).Location
 $SubscriptionId = (Get-AzContext).Subscription.id
 
-# Scaling Down EP
 # Finishing the automation account configuration
 .\Infrastructure\ServicePrincipal\New-RunAsAccount.ps1 -ResourceGroup $resourceGroup -AutomationAccountName $automationAccount -ApplicationDisplayName $automationAccount -SubscriptionId $SubscriptionId -CreateClassicRunAsAccount $false -SelfSignedCertPlainPassword $true -SelfSignedCertNoOfMonthsUntilExpired 120
 
+# Scaling down the ellastic pool
 # Create a webhook for scaling down elastic pool runbook
 $Webhook = New-AzAutomationWebhook -Name "WebHook_ScaleDownAzureSqlElasticPool" -IsEnabled $True  -RunbookName "ScaleDownAzureSqlElasticPool" -ResourceGroup $resourceGroup -AutomationAccountName $automationAccount -ExpiryTime "01.01.2030" -Force
 
 # Create the action group
-# Create the corresponding webhooh receiver linked to runbook webhook
+# Create the corresponding webhook receiver linked to runbook webhook
 $webhookReceiver = New-AzActionGroupReceiver -Name 'ScaleDownAzureSqlElasticPool_Receiver' -WebhookReceiver -ServiceUri $Webhook.WebhookURI -UseCommonAlertSchema
 # Create action group for scaling down elastip pool
 $actionGroup = Set-AzActionGroup -Name "ScaleDownAzureSqlElasticPool" -ResourceGroup $resourceGroup -ShortName "ScaleDownEP" -Receiver $webhookReceiver 
@@ -34,13 +34,12 @@ $alertingAction = New-AzScheduledQueryRuleAlertingAction -AznsAction $aznsAction
 New-AzScheduledQueryRule -Location $location -Action $alertingAction -Enabled $true -Description "ScaleDownAzureSqlElasticPool" -Schedule $schedule -Source $source -Name "ScaleDownAzureSqlElasticPool" -ResourceGroup $resourceGroup
 
 
-# Scaling UP EP
-# Finishing the automation account configuration
+# Scaling up the elastic pool
 # Create a webhook for scaling Up elastic pool runbook
 $Webhook = New-AzAutomationWebhook -Name "WebHook_ScaleUpAzureSqlElasticPool" -IsEnabled $true  -RunbookName "ScaleUpAzureSqlElasticPool" -ResourceGroup $resourceGroup -AutomationAccountName $automationAccount -ExpiryTime "01.01.2030" -Force
 
 # Create the action group
-# Create the corresponding webhooh receiver linked to runbook webhook
+# Create the corresponding webhook receiver linked to runbook webhook
 $webhookReceiver = New-AzActionGroupReceiver -Name 'ScaleUpAzureSqlElasticPool_Receiver' -WebhookReceiver -ServiceUri $Webhook.WebhookURI -UseCommonAlertSchema
 # Create action group for scaling Up elastip pool
 $actionGroup = Set-AzActionGroup -Name "ScaleUpAzureSqlElasticPool" -ResourceGroup $resourceGroup -ShortName "ScaleUpEP" -Receiver $webhookReceiver
